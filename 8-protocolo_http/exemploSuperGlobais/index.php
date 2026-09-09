@@ -26,7 +26,10 @@ $email = ""; // receberá o valor do campo email para cadastro de email
 //busca pelo name e atribu o valor a superglobal ($_GET)
 $buscaProduto = trim((string) ($_GET["produto"] ?? ""));
 //verificação/operador de nulidade de uma variável (coalescência nula)
-$precoMaximoTexto = trim((string) ($_GET["precomaximo"])); // recebe o valor do input preco_maximo
+$precoMaximoTexto = trim((string) ($_GET["precoMaximo"])); // recebe o valor do input preco_maximo
+
+$categoria = trim((string) ($_GET["categoria"])); // recebe o valor do input preco_maximo
+
 
 
 $produtosFiltrado = $produtos; //copiando a lista de produtos para produtos filtrados
@@ -36,15 +39,23 @@ if($buscaProduto !== "" || $precoMaximoTexto !== ""){ // se algum dos inputs for
     $produtosFiltrado = array_filter($produtos, function (array $produto) use ($buscaProduto,$precoMaximoTexto): bool {
         $nomeStatus = true;
         $precoStatus = true;
+        $categoriaStatus = true;
         //verificação se no nome do produto contêm o termo de busca, se tiver retorna true
         if($buscaProduto !== ""){
             $nomeStatus = str_contains(strtolower($produto["nome"]),strtolower($buscaProduto));
+        }
+        if($buscaProduto !== ""){
+            $categoria = str_contains(strtolower($produto["categoria"]),strtolower($buscaProduto));
         }
 
         //vericar o preco máximo de um produto e filtra se o produto se
         if($precoMaximoTexto !== ""){
             $precoMaximo = filter_var($precoMaximoTexto, FILTER_VALIDATE_FLOAT);
             $precoStatus = $precoMaximo !== false && $produto["preco"] <= $precoMaximo;
+        }
+        if($categoriaStatus !== ""){
+            $categoria = filter_var($precoMaximoTexto, FILTER_VALIDATE_FLOAT);
+            $precoStatus = $precoMaximo !== false && $produto["categoria"] <= $categoria;
         }
 
         return $nomeStatus && $precoStatus;
